@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRUPO BHDS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        bhds: {
+                            bg: '#050911',     // Deepest black/blue
+                            card: '#0f172a',   // Slate 900
+                            border: '#1e293b', // Slate 800
+                            accent: '#C5A059', // Gold premium
+                            text: '#F8FAFC',   // Slate 50
+                            muted: '#94A3B8'   // Slate 400
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050911;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.05) 0%, transparent 25%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Background blobs */
+        .ambient-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(197, 160, 89, 0.15); animation: float 10s infinite alternate; }
+        .blob-2 { bottom: -10%; right: -10%; width: 50vw; height: 50vw; background: rgba(30, 58, 138, 0.15); animation: float 12s infinite alternate-reverse; }
+
+        /* Modern Glass Card */
+        .company-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0; /* For animation */
+        }
+
+        /* Hover Effect: Gradient Border & Glow */
+        .company-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            padding: 1.5px; /* Border width */
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0)); 
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+            transition: opacity 0.5s ease;
+        }
+
+        .company-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            background: rgba(22, 32, 50, 0.7);
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .company-card:hover::before {
+            background: linear-gradient(135deg, rgba(197, 160, 89, 0.8), rgba(56, 189, 248, 0.3));
+            opacity: 1;
+        }
+
+        /* Inner shine effect on hover */
+        .company-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: skewX(-25deg);
+            transition: 0.7s;
+            pointer-events: none;
+        }
+        .company-card:hover::after {
+            left: 150%;
+        }
+
+        /* Logo Container */
+        .logo-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+        .company-card:hover .logo-container {
+            border-color: rgba(197, 160, 89, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94A3B8;
+            transition: all 0.3s ease;
+        }
+        .company-card:hover .status-badge {
+            background: rgba(197, 160, 89, 0.15);
+            color: #C5A059;
+            border-color: rgba(197, 160, 89, 0.4);
+            box-shadow: 0 0 10px rgba(197, 160, 89, 0.1);
+        }
+
+        /* Animations Stagger */
+        .stagger-1 { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; }
+        .stagger-2 { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; }
+        .stagger-3 { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; }
+        .stagger-4 { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards; }
+        .stagger-5 { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards; }
+        .stagger-6 { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards; }
+        .stagger-7 { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards; }
+        .stagger-8 { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards; }
+
+        .company-logo {
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="text-bhds-text py-12 px-4 sm:px-6 relative selection:bg-bhds-accent selection:text-bhds-bg">
+
+    <!-- Ambient Background -->
+    <div class="ambient-blob blob-1"></div>
+    <div class="ambient-blob blob-2"></div>
+
+    <!-- Header / Bio Profile -->
+    <header class="max-w-3xl mx-auto text-center mb-16 relative z-10 animate-[slideUp_1s_ease-out_forwards]">
+        
+        <div class="relative inline-block group cursor-pointer">
+            <div class="absolute inset-0 bg-bhds-accent rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500 animate-pulse-slow"></div>
+            <div class="relative w-28 h-28 p-1 rounded-full border border-bhds-accent/30 bg-bhds-card/40 backdrop-blur-md shadow-2xl mb-6 mx-auto transition-transform duration-500 group-hover:scale-105">
+                <div class="w-full h-full rounded-full overflow-hidden bg-black flex items-center justify-center">
+                    <img src="https://grupobhds.com/logo.png" alt="Grupo BHDS Logo" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/000000/FFFFFF?text=BHDS';">
+                </div>
+            </div>
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl font-bold tracking-tight mb-4 text-white drop-shadow-lg">
+            GRUPO <span class="text-transparent bg-clip-text bg-gradient-to-r from-bhds-accent to-yellow-200">BHDS</span>
+        </h1>
+        <p class="text-slate-400 text-lg max-w-xl mx-auto font-light leading-relaxed mb-8">
+            Holding de investimentos focada em <span class="text-slate-200 font-normal">negócios digitais</span>, inovação e tecnologia. Construindo e escalando soluções online.
+        </p>
+        
+        <div class="flex justify-center gap-6">
+            <a href="mailto:contato@grupobhds.com" class="group flex items-center justify-center w-14 h-14 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/10 hover:border-bhds-accent/50 hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] hover:-translate-y-1">
+                <i class="fas fa-envelope text-xl text-slate-400 group-hover:text-bhds-accent transition-colors"></i>
+            </a>
+            <a href="https://wa.me/5543991228540" target="_blank" class="group flex items-center justify-center w-14 h-14 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/10 hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:-translate-y-1">
+                <i class="fab fa-whatsapp text-2xl text-slate-400 group-hover:text-green-500 transition-colors"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Grid de Empresas -->
+    <main class="max-w-3xl mx-auto space-y-6 relative z-10">
+        
+        <!-- Clientou (Destaque) -->
+        <div class="company-card rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-start group stagger-1 border-t border-t-bhds-accent/20">
+            <!-- Background Decoration -->
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-bhds-accent/10 rounded-full blur-3xl group-hover:bg-bhds-accent/20 transition-colors duration-700"></div>
+            
+            <div class="w-20 h-20 rounded-2xl logo-container flex items-center justify-center flex-shrink-0 p-3 shadow-lg z-10 bg-black/40">
+                <img src="https://grupobhds.com/logo-clientou.png" alt="Clientou Logo" class="company-logo">
+            </div>
+            
+            <div class="flex-1 z-10 relative">
+                <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                    <h3 class="text-2xl font-bold text-white group-hover:text-bhds-accent transition-colors">Clientou</h3>
+                    <span class="status-badge border-bhds-accent/30 text-bhds-accent bg-bhds-accent/5 shadow-[0_0_10px_rgba(197,160,89,0.1)]">Plataforma & IA</span>
+                </div>
+                <p class="text-slate-400 text-sm sm:text-base leading-relaxed mb-5 font-light group-hover:text-slate-300 transition-colors">
+                    A evolução do modelo de geração de leads. Plataforma inteligente que conecta prestadores de serviço a clientes qualificados utilizando <span class="text-white font-normal">automação</span> e <span class="text-white font-normal">inteligência artificial</span>.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs font-semibold tracking-wide text-slate-300 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 group-hover:border-bhds-accent/20 transition-colors">IA & Automação</span>
+                    <span class="text-xs font-semibold tracking-wide text-slate-300 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 group-hover:border-bhds-accent/20 transition-colors">Ads</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inexplor -->
+        <div class="company-card rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-start group stagger-2">
+            <div class="w-16 h-16 rounded-xl logo-container flex items-center justify-center flex-shrink-0 p-2 shadow-lg bg-black/40">
+                <img src="https://grupobhds.com/logo-inexplor.png" alt="Inexplor Logo" class="company-logo">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-bhds-accent transition-colors">Inexplor</h3>
+                    <span class="status-badge">Plataforma</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4 font-light group-hover:text-slate-300 transition-colors">
+                    Ecossistema exclusivo de produtos "ocultos" para afiliados. Ofertas validadas fora do radar dos marketplaces tradicionais.
+                </p>
+                <span class="text-xs font-medium text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">Marketing de Afiliados</span>
+            </div>
+        </div>
+
+        <!-- Unilançamento -->
+        <div class="company-card rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-start group stagger-3">
+            <div class="w-16 h-16 rounded-xl logo-container flex items-center justify-center flex-shrink-0 p-2 shadow-lg bg-black/40">
+                <img src="https://grupobhds.com/logo-unilancamento.png" alt="Unilançamento Logo" class="company-logo">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-bhds-accent transition-colors">Unilançamento</h3>
+                    <span class="status-badge">Assinatura</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4 font-light group-hover:text-slate-300 transition-colors">
+                    Clube de assinatura para afiliados profissionais. Central de grandes lançamentos digitais para tráfego em escala.
+                </p>
+                <span class="text-xs font-medium text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">Lançamentos Digitais</span>
+            </div>
+        </div>
+
+        <!-- Extincod -->
+        <div class="company-card rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-start group stagger-4">
+            <div class="w-16 h-16 rounded-xl logo-container flex items-center justify-center flex-shrink-0 p-2 shadow-lg bg-black/40">
+                <img src="https://grupobhds.com/logo-extincod.png" alt="Extincod Logo" class="company-logo">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-bhds-accent transition-colors">Extincod</h3>
+                    <span class="status-badge">Software</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4 font-light group-hover:text-slate-300 transition-colors">
+                    Tecnologia para segurança contra incêndio. Softwares e gestão inteligente para empresas de extintores.
+                </p>
+                <span class="text-xs font-medium text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">B2B Niche SaaS</span>
+            </div>
+        </div>
+
+        <!-- M2CBR -->
+        <div class="company-card rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-start group stagger-5">
+            <div class="w-16 h-16 rounded-xl logo-container flex items-center justify-center flex-shrink-0 p-2 shadow-lg bg-black/40">
+                <img src="https://grupobhds.com/logo-m2cbr.png" alt="M2CBR Logo" class="company-logo">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-bhds-accent transition-colors">M2CBR</h3>
+                    <span class="status-badge">Agência</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4 font-light group-hover:text-slate-300 transition-colors">
+                    Braço de Comunicação e Marketing Comercial. Estratégia de marca e campanhas de alta performance.
+                </p>
+                <span class="text-xs font-medium text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">Marketing Comercial</span>
+            </div>
+        </div>
+
+        <!-- Descomplicred -->
+        <div class="company-card rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-start group stagger-6">
+            <div class="w-16 h-16 rounded-xl logo-container flex items-center justify-center flex-shrink-0 p-2 shadow-lg bg-black/40">
+                <img src="https://grupobhds.com/logo-descomplicred.png" alt="Descomplicred Logo" class="company-logo">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-bhds-accent transition-colors">Descomplicred</h3>
+                    <span class="status-badge">Fintech</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4 font-light group-hover:text-slate-300 transition-colors">
+                    Facilitadora de crédito inteligente. Microempréstimos via limite de cartão com gestão simplificada.
+                </p>
+                <span class="text-xs font-medium text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">Soluções Financeiras</span>
+            </div>
+        </div>
+
+        <!-- Triloc -->
+        <div class="company-card rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-start group stagger-7">
+            <div class="w-16 h-16 rounded-xl logo-container flex items-center justify-center flex-shrink-0 p-2 shadow-lg bg-black/40">
+                <img src="https://grupobhds.com/logo-triloc.png" alt="Triloc Logo" class="company-logo">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-bhds-accent transition-colors">Triloc</h3>
+                    <span class="status-badge">Intermediação</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4 font-light group-hover:text-slate-300 transition-colors">
+                    Conexão local entre clientes e prestadores de serviço através de inteligência geográfica e Google Ads.
+                </p>
+                <span class="text-xs font-medium text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">Service Marketplace</span>
+            </div>
+        </div>
+
+        <!-- Systec Rastreamento -->
+        <div class="company-card rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-start group stagger-8">
+            <div class="w-16 h-16 rounded-xl logo-container flex items-center justify-center flex-shrink-0 p-2 shadow-lg bg-black/40">
+                <img src="https://grupobhds.com/logo-systec.png" alt="Systec Logo" class="company-logo">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-bhds-accent transition-colors">Systec Rastreamento</h3>
+                    <span class="status-badge">Joint Venture</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4 font-light group-hover:text-slate-300 transition-colors">
+                    Branding e estratégia para rastreamento veicular. Parceria estratégica com o Grupo KNK.
+                </p>
+                <span class="text-xs font-medium text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">Rastreamento</span>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center mt-20 pb-10 relative z-10 animate-[fadeIn_2s_ease-out_1s_forwards] opacity-0">
+        <div class="inline-block w-12 h-0.5 bg-gradient-to-r from-transparent via-bhds-accent/50 to-transparent mb-4"></div>
+        <p class="text-bhds-muted text-[0.65rem] tracking-[0.2em] font-bold uppercase hover:text-bhds-accent transition-colors cursor-default">
+            &copy; 2020 GRUPO BHDS • TODOS OS DIREITOS RESERVADOS
+        </p>
+    </footer>
+
+    <style>
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+
+</body>
+</html>
